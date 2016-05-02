@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Animator implements ApplicationListener
+public class WiggleAnimator implements ApplicationListener
 {
-
     Animation animation;
     Texture sheet;
     TextureRegion[] frames;
@@ -17,20 +16,20 @@ public class Animator implements ApplicationListener
     TextureRegion currentFrame;
     String sheetName;
     int columns, rows, count;
-    float speed, width, height, x, y;
-    boolean finished;
+    Drop drop;
+    float speed;
+    private boolean finished;
 
     float stateTime;
 
-    public Animator(String sheetName, int columns, int rows, float speed, SpriteBatch batcher, float width, float height)
+    public WiggleAnimator(String sheetName, int columns, int rows, float speed, SpriteBatch batcher, Drop drop)
     {
         this.sheetName = sheetName;
         this.columns = columns;
         this.rows = rows;
         this.speed = speed;
         this.batcher = batcher;
-        this.width = width;
-        this.height = height;
+        this.drop = drop;
     }
 
     @Override
@@ -51,12 +50,6 @@ public class Animator implements ApplicationListener
         stateTime = 0f;
     }
 
-    public void updateLocation(float x, float y)
-    {
-        this.x = x;
-        this.y = y;
-    }
-
     @Override
     public void render()
     {
@@ -67,7 +60,7 @@ public class Animator implements ApplicationListener
 
         if (currentFrame != null)
         {
-            batcher.draw(currentFrame, x, y, width, height);
+            batcher.draw(currentFrame, drop.getX(), drop.getY(), 290.4f, 140f);
         }
         batcher.end();
 

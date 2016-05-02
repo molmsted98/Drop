@@ -7,12 +7,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-/**
- * Created by student on 3/16/16.
- */
-public class MouthAnimator implements ApplicationListener
+public class CompressAnimator implements ApplicationListener
 {
-
     Animation animation;
     Texture sheet;
     TextureRegion[] frames;
@@ -20,20 +16,20 @@ public class MouthAnimator implements ApplicationListener
     TextureRegion currentFrame;
     String sheetName;
     int columns, rows, count;
-    Mouth mouth;
+    Drop drop;
     float speed;
-    boolean finished;
+    private boolean finished;
 
     float stateTime;
 
-    public MouthAnimator(String sheetName, int columns, int rows, float speed, SpriteBatch batcher, Mouth mouth)
+    public CompressAnimator(String sheetName, int columns, int rows, float speed, SpriteBatch batcher, Drop drop)
     {
         this.sheetName = sheetName;
         this.columns = columns;
         this.rows = rows;
         this.speed = speed;
         this.batcher = batcher;
-        this.mouth = mouth;
+        this.drop = drop;
     }
 
     @Override
@@ -64,7 +60,7 @@ public class MouthAnimator implements ApplicationListener
 
         if (currentFrame != null)
         {
-            batcher.draw(currentFrame, mouth.getX(), mouth.getY(), 261, 120);
+            batcher.draw(currentFrame, drop.getX(), drop.getY(), 290.4f, 449.6f);
         }
         batcher.end();
 
@@ -104,4 +100,5 @@ public class MouthAnimator implements ApplicationListener
     {
         return finished;
     }
+
 }

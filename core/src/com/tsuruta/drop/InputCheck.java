@@ -35,21 +35,50 @@ public class InputCheck
                     return true;
                 }
             }
+
             if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
             {
-                if (mainCharacter.getX() < Gdx.graphics.getWidth())
+                if (mainCharacter.getX() < Gdx.graphics.getWidth() - mainCharacter.getWidth())
                 {
                     mainCharacter.moveRight();
                     return true;
                 }
             }
+
             if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
             {
+                //Count how long the space bar has been held down.
                 timer ++;
+
+                //Let the character know that jump is charged
+                mainCharacter.setJumpStatus(true);
+
+                return true;
             }
             else
             {
+                //Ready for takeoff
+                if (mainCharacter.getJumpStatus())
+                {
+                    if (timer >=25 && timer < 55)
+                    {
+                        mainCharacter.setYVel(27);
+                    }
+                    else if (timer >= 55)
+                    {
+                        mainCharacter.setYVel(37);
+                    }
+                    mainCharacter.setJumpStatus(false);
+                    mainCharacter.setDropState("Jump");
+                }
+
+                //No longer charging
                 timer = 0;
+            }
+
+            if (Gdx.input.isKeyJustPressed(Input.Keys.H))
+            {
+                g.setGameState("Menu");
             }
         }
         else if (g.getGameState().equals("Menu"))
@@ -58,6 +87,17 @@ public class InputCheck
             {
                 g.setGameState("Running");
                 return true;
+            }
+            if (Gdx.input.isKeyJustPressed(Input.Keys.H))
+            {
+                g.setGameState("Help");
+            }
+        }
+        else if (g.getGameState().equals("Help"))
+        {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.H))
+            {
+                g.setGameState("Menu");
             }
         }
         else

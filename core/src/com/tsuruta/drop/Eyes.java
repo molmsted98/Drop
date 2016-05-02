@@ -11,12 +11,11 @@ import java.util.Random;
 public class Eyes
 {
     private float x, y;
-    private Animator blinkAnimation, openEyes;
+    private Animator blinkAnimation, openEyes, closeEyes;
     private SpriteBatch batcher;
-    private Sprite eye;
+    private Sprite eye, closedEye;
     private String state;
     private Random random;
-    private int blinkChance;
     Drop drop;
 
     public Eyes(float x, float y, SpriteBatch batcher, Drop drop)
@@ -27,14 +26,18 @@ public class Eyes
         this.random = new Random();
 
         Texture centerEye = new Texture("Centered.png");
+        Texture eyeClosed = new Texture("EyeClosed.png");
 
         eye = new Sprite(centerEye);
+        closedEye = new Sprite(eyeClosed);
 
-        blinkAnimation = new Animator("blinkSheet.png", 5, 2, .04f, batcher, this);
-        openEyes = new Animator("EyeOpenSheet.png", 5, 1, .12f, batcher, this);
+        blinkAnimation = new Animator("blinkSheet.png", 5, 2, .04f, batcher, 103, 117);
+        openEyes = new Animator("EyeOpenSheet.png", 5, 1, .05f, batcher, 103, 117);
+        closeEyes = new Animator("EyeCloseSheet.png", 5, 1, .05f, batcher, 90, 100);
 
         blinkAnimation.create();
         openEyes.create();
+        closeEyes.create();
 
         this.batcher = batcher;
         state = "Open";
@@ -45,19 +48,52 @@ public class Eyes
         this.x = x + xShift;
         this.y = y;
 
-        //Draw the base eye.
-        batcher.begin();
-        batcher.draw(eye, x + xShift, y, 103, 117);
-        batcher.end();
+        if (!Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            //Draw the base eye.
+            batcher.begin();
+            batcher.draw(eye, x + xShift, y, 103, 117);
+            batcher.end();
+        }
+        else
+        {
+            if (!(closeEyes.getFinished()))
+            {
+                batcher.begin();
+                batcher.draw(eye, x + xShift-5, y-10, 90, 100);
+                batcher.end();
+            }
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE))
+        {
+            if (!(closeEyes.getFinished()))
+            {
+                closeEyes.updateLocation(x-5 + xShift, y-10);
+                closeEyes.render();
+            }
+            else
+            {
+                state = "Closed";
+                batcher.begin();
+                batcher.draw(closedEye, x + xShift - 5, y-30, 90, 100);
+                batcher.end();
+            }
+        }
+        else
+        {
+            closeEyes.reset();
+        }
 
         //Draw extras for the eyes.
-        if (!Gdx.input.isKeyPressed(Input.Keys.LEFT)
-                || !Gdx.input.isKeyPressed(Input.Keys.RIGHT))
+        if ((!Gdx.input.isKeyPressed(Input.Keys.LEFT)
+                || !Gdx.input.isKeyPressed(Input.Keys.RIGHT)) && !Gdx.input.isKeyPressed(Input.Keys.SPACE))
         {
             if (state.equals("Closed"))
             {
                 if (!(openEyes.getFinished()))
                 {
+                    openEyes.updateLocation(x + xShift , y);
                     openEyes.render();
                 }
                 else
